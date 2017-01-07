@@ -16,7 +16,7 @@ public class FragmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        setTitle("Playing " + Darts.getSelectedGame());
+        setTitle(Darts.getSelectedGame() + " : Game Details");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         FragmentManager fm = getFragmentManager();

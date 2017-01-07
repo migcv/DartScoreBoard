@@ -26,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/playerName"
-            android:layout_weight="1"
             android:textAllCaps="true"
             android:textStyle="normal|bold"
             android:textSize="20sp" />
@@ -37,7 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:id="@+id/textView6"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_weight="1.57"
+            android:textAlignment="textEnd" />
 
         <TextView
             android:text="####"
@@ -94,20 +95,12 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:text="x1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/x1Button1"
-                android:layout_weight="1"
-                android:backgroundTint="?attr/colorButtonNormal" />
-
-            <Button
                 android:text="x2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/x2Button1"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary" />
+                android:backgroundTint="@color/blueButton" />
 
             <Button
                 android:text="x3"
@@ -115,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/x3Button1"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/holo_red_light" />
+                android:backgroundTint="@color/redButton" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,20 +146,12 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:text="x1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/x1Button2"
-                android:layout_weight="1"
-                />
-
-            <Button
                 android:text="x2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/x2Button2"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary" />
+                android:backgroundTint="@color/blueButton" />
 
             <Button
                 android:text="x3"
@@ -174,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/x3Button2"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/holo_red_light" />
+                android:backgroundTint="@color/redButton" />
         </LinearLayout>
 
         <LinearLayout
@@ -211,19 +196,12 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:text="x1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/x1Button3"
-                android:layout_weight="1" />
-
-            <Button
                 android:text="x2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/x2Button3"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary" />
+                android:backgroundTint="@color/blueButton" />
 
             <Button
                 android:text="x3"
@@ -231,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/x3Button3"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/holo_red_light" />
+                android:backgroundTint="@color/redButton" />
         </LinearLayout>
 
         <Button
