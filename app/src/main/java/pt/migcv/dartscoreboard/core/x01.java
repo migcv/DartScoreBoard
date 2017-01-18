@@ -13,16 +13,23 @@ public class x01 {
     public static final String DOUBLE_OUT = "Double Out";
     public static final String STRAIGHT_OUT = "Straight Out";
 
+    private static final int[][] POSSIBLE_PLAYS = {{0, 1, 2}, {0, 1}, {1, 2}, {0, 2}, {0}, {1}, {2}};
+
     public static int score_start;
     public static String game_mode;
 
-    private static HashMap<String, Integer> playersMap = new HashMap<String, Integer>();
+    private static boolean gameEnded = false;
+    private static String winner;
+
+    private static HashMap<String, Integer> playersMap = new HashMap<String, Integer>(); // <player_name : player_score>
 
     private static Integer currentPlayer = 0;
     private static ArrayList<Player> playerQueue = new ArrayList<Player>();
 
+    private static Integer turn = 1;
+
     public static Integer[] turnThrows = new Integer[3];
-    public static Integer[] turnMultiplier = new Integer[3];
+    public static Integer[] turnMultiplier = {1, 1, 1};
 
     public static void beginGame() {
         for(int i = 0; i < Darts.getTotalPlayers(); i++) {
@@ -40,24 +47,37 @@ public class x01 {
     }
 
     public static void endTurn() {
-        int turnScore = 0;
-        for(int i = 0; i < 3; i++) {
-            if(turnMultiplier[i] == null) {
-                turnMultiplier[i] = 1;
+        int lowerScore = playersMap.get(getCurrentPlayer().getName());
+        int[] turnScore = new int[3];
+        turnScore[0] = turnThrows[0] * turnMultiplier[0];
+        turnScore[1] = turnThrows[1] * turnMultiplier[1];
+        turnScore[2] = turnThrows[2] * turnMultiplier[2];
+        System.out.println("Throws for player: " + getCurrentPlayer().getName());
+        for(int j = 0; j < POSSIBLE_PLAYS.length; j++) {
+            int scoreTry = 0;
+            for(int i = 0; i < POSSIBLE_PLAYS[j].length; i++) {
+                scoreTry +=  turnScore[POSSIBLE_PLAYS[j][i]];
             }
-            System.out.println("Throw " + (i+1) + ": " + turnThrows[i] + " x " + turnMultiplier[i]);
-            turnThrows[i] *= turnMultiplier[i];
-            turnScore += turnThrows[i];
+            scoreTry = playersMap.get(getCurrentPlayer().getName()) - scoreTry;
+            if(scoreTry >= 0 && lowerScore > scoreTry) {
+                lowerScore = scoreTry;
+            }
         }
-        int currentScore = playersMap.get(playerQueue.get(currentPlayer).getName()) - turnScore;
-        playersMap.put(playerQueue.get(currentPlayer).getName(), currentScore);
+        if(lowerScore == 0) { // GAME HAS ENDED!!!
+            System.out.println("Player: " + getCurrentPlayer().getName() + " won!!!");
+            gameEnded = true;
+            winner = getCurrentPlayer().getName();
+        }
+        System.out.println("Player: " + getCurrentPlayer().getName() + " score is " + lowerScore);
+        playersMap.put(getCurrentPlayer().getName(), lowerScore);
         getCurrentPlayer().addTurn(turnThrows, turnMultiplier);
         currentPlayer++;
         if(currentPlayer >= playerQueue.size()) {
             currentPlayer = 0;
+            turn++;
         }
         turnThrows = new Integer[3];
-        turnMultiplier = new Integer[3];
+        turnMultiplier = new Integer[]{1, 1, 1};
     }
 
     public static Player getCurrentPlayer() {
@@ -75,5 +95,11 @@ public class x01 {
     public static int getPlayerScore(String name) {
         return playersMap.get(name);
     }
+
+    public static int getTurn() {return turn; }
+
+    public static boolean gameEnded() { return gameEnded; }
+
+    public static String getWinner() { return winner; }
 
 }

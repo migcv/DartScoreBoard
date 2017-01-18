@@ -10,45 +10,129 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="pt.migcv.dartscoreboard.activities.MainActivity">
 
-    <Button
-        android:text="Around The Clock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/x01Button"
-        android:layout_alignParentStart="true"
-        android:id="@+id/aroundClockButton"
-        android:layout_alignParentEnd="true"
-        android:onClick="selectGame" />
-
-    <Button
-        android:text="Cricket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/aroundClockButton"
-        android:layout_alignParentStart="true"
-        android:id="@+id/cricketButton"
-        android:layout_alignParentEnd="true"
-        android:onClick="selectGame" />
-
-    <TextView
-        android:text="Choose the game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:textAlignment="center"
-        android:textStyle="normal|bold"
-        android:textSize="20sp" />
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:text="x01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/x01Button"
-        android:onClick="selectGame"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/imageView2"
+            android:layout_above="@+id/textView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.63" />
+
+        <TextView
+            android:text="Choose the game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"
+            android:textSize="30sp"
+            android:layout_above="@+id/x01Button"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="x01"
+                android:layout_width="wrap_content"
+                android:id="@+id/x01Button"
+                android:onClick="selectGame"
+                android:layout_above="@+id/aroundClockButton"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_height="75dp"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="\?"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:id="@+id/x01RulesButton"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_orange_light"
+                android:textColor="@android:color/background_light"
+                android:onClick="rulesGame" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="Around The Clock"
+                android:layout_width="wrap_content"
+                android:layout_height="75dp"
+                android:id="@+id/aroundClockButton"
+                android:onClick="selectGame"
+                android:layout_above="@+id/cricketButton"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="\?"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:id="@+id/aroundClockRulesButton"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_orange_light"
+                android:textColor="@android:color/background_light"
+                android:onClick="rulesGame" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true">
+
+            <Button
+                android:text="Cricket"
+                android:layout_width="wrap_content"
+                android:layout_height="75dp"
+                android:id="@+id/cricketButton"
+                android:onClick="selectGame"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="\?"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:id="@+id/cricketRulesButton"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_orange_light"
+                android:textColor="@android:color/background_light"
+                android:onClick="rulesGame" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

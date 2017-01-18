@@ -15,6 +15,7 @@ public class Darts {
     public static final String cricket = "Cricket";
 
     private static String selectedGame = null;
+
     private static ArrayList<Player> playersList = new ArrayList<Player>();
 
     public static void selectGame(String game) {
@@ -32,17 +33,16 @@ public class Darts {
         return selectedGame;
     }
 
-    public static void addPlayer(String name, int id) throws PlayerAlreadyExistsException {
-        if(!playersList.contains(name)) { // See if name exists
-            if(playersList.size() <= id-1) { // See if ID already exists
-                playersList.add(new Player(name));
-            }
-            else {
-                playersList.set(id-1, new Player(name));
+    public static void addPlayer(String name) throws PlayerAlreadyExistsException {
+        for(int i = 0; i < playersList.size(); i++) {
+            System.out.println( i +" Name: <" + name + "> <" + playersList.get(i).getName() + ">");
+            if(playersList.get(i).getName().equals(name)) {
+                System.out.println("JA EXISTE!!!");
+                throw new PlayerAlreadyExistsException(name);
             }
         }
-        else {
-            throw new PlayerAlreadyExistsException(name);
+        if(!name.isEmpty()) {
+            playersList.add(new Player(name));
         }
     }
 
@@ -52,5 +52,9 @@ public class Darts {
 
     public static Player getPlayer(int i) {
         return playersList.get(i);
+    }
+
+    public static void cleanPlayersList() {
+        playersList = new ArrayList<Player>();
     }
 }

@@ -2,8 +2,11 @@ package pt.migcv.dartscoreboard.fragments.x01;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +41,38 @@ public class GameFragment extends Fragment {
         ((FragmentActivity) getActivity()).setTitle(Darts.getSelectedGame() + " : " + x01.game_mode + " : " + x01.score_start);
 
         ((TextView) view.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName());
-        ((TextView) view.findViewById(R.id.playerName)).setOnClickListener(playerStats);
         ((TextView) view.findViewById(R.id.playerScore)).setText("" + x01.getPlayerScore(x01.getCurrentPlayer().getName()));
+        ((TextView) view.findViewById(R.id.turn)).setText("" + x01.getTurn());
+
+        final Dialog alert = new Dialog(view.getContext());
+
+        alert.setContentView(R.layout.dialog_player_turn);
+        alert.setTitle("Player's Turn");
+
+        ((TextView)alert.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName().toUpperCase());
+        ((TextView)alert.findViewById(R.id.turn)).setText("" + x01.getTurn());
+
+        alert.show();
+
+        // Hide after some seconds
+        final Handler handler  = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (alert.isShowing()) {
+                    alert.dismiss();
+                }
+            }
+        };
+
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                handler.removeCallbacks(runnable);
+            }
+        });
+
+        handler.postDelayed(runnable, 3000);
 
         view.findViewById(R.id.missedButton1).setOnClickListener(missedButton);
         view.findViewById(R.id.missedButton2).setOnClickListener(missedButton);
@@ -58,6 +91,8 @@ public class GameFragment extends Fragment {
 
         view.findViewById(R.id.endTurn).setOnClickListener(endTurn);
 
+        ((TextView) view.findViewById(R.id.playerName)).setOnClickListener(playerStats);
+
         return view;
     }
 
@@ -65,7 +100,7 @@ public class GameFragment extends Fragment {
         public void onClick(View v) {
             final Dialog dialog = new Dialog(view.getContext());
 
-            dialog.setContentView(R.layout.dialog_player_stats);
+            dialog.setContentView(R.layout.dialog_x01_player_stats);
             dialog.setTitle("Player Stats");
             ((TextView)dialog.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName().toUpperCase() + "'s Stats");
             ((TextView)dialog.findViewById(R.id.bestTurn)).setText("" + x01.getCurrentPlayer().getBestTurn());
@@ -101,30 +136,34 @@ public class GameFragment extends Fragment {
             }
             // Turn Score String to Integer
             x01.turnThrows[0] = Integer.parseInt(throw1);
-            if(x01.turnThrows[0] > 20 || x01.turnThrows[0] < 0) {
-                Snackbar.make(view, "1st throw is invalid", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                return;
-            }
             x01.turnThrows[1] = Integer.parseInt(throw2);
-            if(x01.turnThrows[1] > 20 && x01.turnThrows[1] < 0) {
-                Snackbar.make(view, "2nd throw is invalid", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                return;
-            }
             x01.turnThrows[2] = Integer.parseInt(throw3);
-            if(x01.turnThrows[2] > 20 && x01.turnThrows[2] < 0) {
-                Snackbar.make(view, "3rd throw is invalid", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                return;
+            System.out.println("Throws: " + x01.turnThrows[0] + ", " + x01.turnThrows[1] + ", " + x01.turnThrows[2]);
+            for(int i = 0; i < 3; i++) {
+                if((x01.turnThrows[i] > 20 || x01.turnThrows[i] < 0) && x01.turnThrows[i] != 25) {
+                    Snackbar.make(view, (i+1) + "st throw is invalid", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    return;
+                }
             }
             x01.endTurn();
-            ((EditText) view.findViewById(R.id.throw1)).setText("");
-            ((EditText) view.findViewById(R.id.throw2)).setText("");
-            ((EditText) view.findViewById(R.id.throw3)).setText("");
-            Fragment frg = null;
-            frg = getFragmentManager().findFragmentByTag("GAME_FRAGMENT");
-            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(frg);
-            ft.attach(frg);
-            ft.commit();
+            if(x01.gameEnded()) {
+                FragmentManager fm = getFragmentManager();
+                Fragment fragment = new FinalScore();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.activity_fragment, fragment, "FINAL_SCORE_FRAGMENT");
+                ft.commit();
+            }
+            else {
+                ((EditText) view.findViewById(R.id.throw1)).setText("");
+                ((EditText) view.findViewById(R.id.throw2)).setText("");
+                ((EditText) view.findViewById(R.id.throw3)).setText("");
+                Fragment frg = null;
+                frg = getFragmentManager().findFragmentByTag("GAME_FRAGMENT");
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+            }
         }
     };
 

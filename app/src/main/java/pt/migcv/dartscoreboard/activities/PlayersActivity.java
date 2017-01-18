@@ -30,6 +30,10 @@ public class PlayersActivity extends AppCompatActivity {
 
     public int number_of_players = 0;
 
+    private boolean players_unique = false;
+
+    private EditText[] playersEditText = new EditText[6];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,7 @@ public class PlayersActivity extends AppCompatActivity {
         TextView gameSelected = (TextView) findViewById(R.id.game_selected);
         gameSelected.setText(Darts.getSelectedGame());
         TextView totalPlayers = (TextView) findViewById(R.id.total_players);
-        totalPlayers.setText(""+ Darts.getTotalPlayers());
+
         for(int i = 0; i < 2; i++) {
             ++number_of_players;
 
@@ -64,14 +68,18 @@ public class PlayersActivity extends AppCompatActivity {
             ll.addView(textView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
             EditText editText = new EditText(this);
-            editText.addTextChangedListener(new PlayerNameWatcher(this, number_of_players));
+            playersEditText[i] = editText;
             ll.addView(editText, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         }
+        totalPlayers.setText(""+ number_of_players);
     }
 
     public void addNewPlayer(View view) {
-        if(number_of_players != Darts.getTotalPlayers()) {
+        if(isPlayersEditTextEmpty(number_of_players)) {
             Snackbar.make(view, "Fill all the names first", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+        else if(number_of_players >= 6) {
+            Snackbar.make(view, "No more players allowed!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
         else {
             ++number_of_players;
@@ -85,54 +93,54 @@ public class PlayersActivity extends AppCompatActivity {
             ll.addView(textView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
             EditText editText = new EditText(this);
-            editText.addTextChangedListener(new PlayerNameWatcher(this, number_of_players));
+            playersEditText[number_of_players-1] = editText;
             ll.addView(editText, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+            ((TextView) findViewById(R.id.total_players)).setText("" + number_of_players);
         }
     }
 
     public void allPlayersSet(View view) {
-        if(Darts.getTotalPlayers() >= 2) {
+        for (int i = 0; i < playersEditText.length; i++) {
+            if (playersEditText[i] != null) {
+                try {
+                    Darts.addPlayer(playersEditText[i].getText().toString());
+                } catch (PlayerAlreadyExistsException e) {
+                    Snackbar.make(view, "Players with same name", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Darts.cleanPlayersList();
+                    return;
+                }
+            }
+        }
+        if (Darts.getTotalPlayers() >= 2) {
             Intent scanner = new Intent(this, FragmentActivity.class);
             startActivity(scanner);
         }
         else {
             Snackbar.make(view, "Not enough players", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
-    }
 
-
-
-    private class PlayerNameWatcher implements TextWatcher {
-
-        private Activity activity;
-        private int playerID;
-
-        public PlayerNameWatcher(Activity activity, int playerID) {
-            this.activity = activity;
-            this.playerID = playerID;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            try {
-                Darts.addPlayer(charSequence.toString(), playerID);
-                ((TextView) activity.findViewById(R.id.total_players)).setText(""+Darts.getTotalPlayers());
+       /*if(Darts.getTotalPlayers() >= 2) {
+            Darts.preparePlayers();
+            if(players_unique) {
+                Intent scanner = new Intent(this, FragmentActivity.class);
+                startActivity(scanner);
             }
-            catch (PlayerAlreadyExistsException e) {
-                Snackbar.make(activity.findViewById(R.id.total_players), "Player " + playerID + " name already exists", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            else {
+                Snackbar.make(view, "Players with same name", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
+        else {
+            Snackbar.make(view, "Not enough players", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }*/
     }
 
-
+    private boolean isPlayersEditTextEmpty(int n_players) {
+        for(int i = 0; i < n_players; i++) {
+            if(playersEditText[i] == null || playersEditText[i].getText().toString().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

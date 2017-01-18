@@ -23,33 +23,76 @@
 
         <TextView
             android:text="PlayerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="239dp"
+            android:layout_height="match_parent"
             android:id="@+id/playerName"
             android:textAllCaps="true"
             android:textStyle="normal|bold"
-            android:textSize="20sp" />
+            android:textSize="35sp"
+            android:textAlignment="textStart" />
 
-        <TextView
-            android:text="Score:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:id="@+id/textView6"
-            android:textSize="18sp"
-            android:layout_weight="1.57"
-            android:textAlignment="textEnd" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:text="####"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/headline"
-            android:layout_alignParentStart="true"
-            android:id="@+id/playerScore"
-            android:textAlignment="textEnd"
-            android:textStyle="normal|bold"
-            android:textSize="20sp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Turn "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/textView6"
+                    android:textSize="16sp"
+                    android:layout_weight="0.62"
+                    android:textAlignment="textEnd" />
+
+                <TextView
+                    android:text="##"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/headline"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/turn"
+                    android:textAlignment="textEnd"
+                    android:textStyle="normal|bold"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="Score:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/textView6"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd" />
+
+                <TextView
+                    android:text="####"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/headline"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/playerScore"
+                    android:textAlignment="textEnd"
+                    android:textStyle="normal|bold"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -217,7 +260,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/endTurn"
-            android:backgroundTint="#096A47"
+            android:backgroundTint="@color/appTheme"
             android:textColor="@android:color/background_light"
             android:textSize="20sp" />
     </LinearLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+            <TextView
+                android:text="Rules of "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView13"
+                android:textSize="20sp"
+                android:textAlignment="textEnd" />
+
+            <TextView
+                android:text="Cricket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/playerName"
+                android:textStyle="normal|bold"
+                android:textAlignment="textStart"
+                android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Objective:"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:id="@+id/textView9"
+            android:textStyle="normal|bold"
+            android:textSize="20sp"
+            android:layout_width="115dp" />
+
+        <TextView
+            android:text="Get to exactly zero by throwing rounds of three darts and subtracting the sum of those darts from your current score."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Scores:"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:id="@+id/textView9"
+            android:textStyle="normal|bold"
+            android:textSize="20sp"
+            android:layout_width="115dp" />
+
+        <TextView
+            android:text="301, 401, 501, 601 or 1001"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Straigth Out:"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:id="@+id/textView9"
+            android:textStyle="normal|bold"
+            android:textSize="20sp"
+            android:layout_width="115dp" />
+
+        <TextView
+            android:text="You must simply arrive at zero points to win"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Double Out:"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:id="@+id/textView9"
+            android:textStyle="normal|bold"
+            android:textSize="20sp"
+            android:layout_width="115dp" />
+
+        <TextView
+            android:text="You must hit a double that makes your score exactly zero to win"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package pt.migcv.dartscoreboard.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,26 @@ public class MainActivity extends AppCompatActivity {
         Button gameButton = (Button) view;
         Darts.selectGame(gameButton.getText().toString());
         System.out.println("GAME SELECTED WAS: <" + Darts.getSelectedGame() + ">");
-        Intent scanner = new Intent(this, PlayersActivity.class);
-        startActivity(scanner);
+        Intent activity = new Intent(this, PlayersActivity.class);
+        startActivity(activity);
+    }
+
+    public void rulesGame(View view) {
+        final Dialog dialog = new Dialog(view.getContext());
+        if(view.getId() == R.id.x01RulesButton) {
+            System.out.println("RULES OF X01 SELECTED");
+            dialog.setContentView(R.layout.dialog_x01_rules);
+            dialog.show();
+        }
+        else if(view.getId() == R.id.aroundClockRulesButton) {
+            System.out.println("RULES OF X01 SELECTED");
+            dialog.setContentView(R.layout.dialog_around_clock_rules);
+            dialog.show();
+        }
+        else if(view.getId() == R.id.cricketRulesButton) {
+            System.out.println("RULES OF X01 SELECTED");
+            dialog.setContentView(R.layout.dialog_cricket_rules);
+            dialog.show();
+        }
     }
 }
