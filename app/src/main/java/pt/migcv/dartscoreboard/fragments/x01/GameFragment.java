@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import pt.migcv.dartscoreboard.R;
-import pt.migcv.dartscoreboard.activities.FragmentActivity;
 import pt.migcv.dartscoreboard.core.Darts;
+import pt.migcv.dartscoreboard.core.Player;
 import pt.migcv.dartscoreboard.core.x01;
 
 /**
@@ -38,34 +38,52 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_x01_game, container, false);
-        ((FragmentActivity) getActivity()).setTitle(Darts.getSelectedGame() + " : " + x01.game_mode + " : " + x01.score_start);
+        getActivity().setTitle(Darts.getSelectedGame() + " : " + x01.game_mode + " : " + x01.score_start);
 
-        ((TextView) view.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName());
-        ((TextView) view.findViewById(R.id.playerScore)).setText("" + x01.getPlayerScore(x01.getCurrentPlayer().getName()));
+        throw1 = (EditText) view.findViewById(R.id.throw1);
+        throw2 = (EditText) view.findViewById(R.id.throw2);
+        throw3 = (EditText) view.findViewById(R.id.throw3);
+
+        if(x01.getCurrentPlayer().getTurnScore(x01.getTurn() - 1) != null) {
+            // {THROWS, MULTIPLIER, SCORE}
+            Object[] previousTurnScore = x01.getCurrentPlayer().getTurnScore(x01.getTurn() - 1);
+
+            ((TextView) view.findViewById(R.id.playerScore)).setText("" + previousTurnScore[2]);
+            throw1.setText("1".toString(), TextView.BufferType.EDITABLE);
+            throw2.setText("" + ((Integer[])previousTurnScore[0])[1]);
+            throw3.setText("" + ((Integer[])previousTurnScore[0])[2]);
+        }
+        else {
+            ((TextView) view.findViewById(R.id.playerScore)).setText("" + x01.getPlayerScore(x01.getCurrentPlayer().getName()));
+        }
+
+        ((TextView) view.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName().toUpperCase());
         ((TextView) view.findViewById(R.id.turn)).setText("" + x01.getTurn());
+        ((TextView) view.findViewById(R.id.totalPlayers)).setText("" + x01.getTotalPlayers());
+        ((TextView) view.findViewById(R.id.currentPlayer)).setText("" + (x01.getCurrentPlayerIndex() + 1));
 
-        final Dialog alert = new Dialog(view.getContext());
+        final Dialog turnStart = new Dialog(view.getContext());
 
-        alert.setContentView(R.layout.dialog_player_turn);
-        alert.setTitle("Player's Turn");
+        turnStart.setContentView(R.layout.dialog_player_turn);
+        turnStart.setTitle("Player's Turn");
 
-        ((TextView)alert.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName().toUpperCase());
-        ((TextView)alert.findViewById(R.id.turn)).setText("" + x01.getTurn());
+        ((TextView)turnStart.findViewById(R.id.playerName)).setText("" + x01.getCurrentPlayer().getName().toUpperCase());
+        ((TextView)turnStart.findViewById(R.id.turn)).setText("" + x01.getTurn());
 
-        alert.show();
+        turnStart.show();
 
         // Hide after some seconds
         final Handler handler  = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (alert.isShowing()) {
-                    alert.dismiss();
+                if (turnStart.isShowing()) {
+                    turnStart.dismiss();
                 }
             }
         };
 
-        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        turnStart.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 handler.removeCallbacks(runnable);
@@ -78,10 +96,6 @@ public class GameFragment extends Fragment {
         view.findViewById(R.id.missedButton2).setOnClickListener(missedButton);
         view.findViewById(R.id.missedButton3).setOnClickListener(missedButton);
 
-        throw1 = (EditText) view.findViewById(R.id.throw1);
-        throw2 = (EditText) view.findViewById(R.id.throw2);
-        throw3 = (EditText) view.findViewById(R.id.throw3);
-
         view.findViewById(R.id.x2Button1).setOnClickListener(multiplierButton1);
         view.findViewById(R.id.x3Button1).setOnClickListener(multiplierButton1);
         view.findViewById(R.id.x2Button2).setOnClickListener(multiplierButton2);
@@ -89,6 +103,7 @@ public class GameFragment extends Fragment {
         view.findViewById(R.id.x2Button3).setOnClickListener(multiplierButton3);
         view.findViewById(R.id.x3Button3).setOnClickListener(multiplierButton3);
 
+        view.findViewById(R.id.backButton).setOnClickListener(previousTurn);
         view.findViewById(R.id.endTurn).setOnClickListener(endTurn);
 
         ((TextView) view.findViewById(R.id.playerName)).setOnClickListener(playerStats);
@@ -114,6 +129,23 @@ public class GameFragment extends Fragment {
             ((TextView)dialog.findViewById(R.id.x3Hits)).setText("" + x01.getCurrentPlayer().getX3Hits());
 
             dialog.show();
+        }
+    };
+
+    private View.OnClickListener previousTurn = new View.OnClickListener() {
+        public void onClick(View v) {
+            if(x01.getTurn() >= 1 && x01.getCurrentPlayerIndex() == 0) {
+                Snackbar.make(view, "There's no previous turn!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                return;
+            }
+            x01.previousTurn();
+
+            Fragment frg = null;
+            frg = getFragmentManager().findFragmentByTag("GAME_FRAGMENT");
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(frg);
+            ft.attach(frg);
+            ft.commit();
         }
     };
 

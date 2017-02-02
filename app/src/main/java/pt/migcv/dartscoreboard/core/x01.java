@@ -70,7 +70,7 @@ public class x01 {
         }
         System.out.println("Player: " + getCurrentPlayer().getName() + " score is " + lowerScore);
         playersMap.put(getCurrentPlayer().getName(), lowerScore);
-        getCurrentPlayer().addTurn(turnThrows, turnMultiplier);
+        getCurrentPlayer().addTurn(turn - 1, turnThrows, turnMultiplier, lowerScore);
         currentPlayer++;
         if(currentPlayer >= playerQueue.size()) {
             currentPlayer = 0;
@@ -80,8 +80,26 @@ public class x01 {
         turnMultiplier = new Integer[]{1, 1, 1};
     }
 
+    public static void previousTurn() {
+        currentPlayer--;
+        if(currentPlayer < 0) {
+            currentPlayer = playerQueue.size() - 1;
+            turn--;
+        }
+        Object[] aux = getCurrentPlayer().getTurnScore(turn - 1);
+        playersMap.put(getCurrentPlayer().getName(), (int) aux[2]);
+    }
+
     public static Player getCurrentPlayer() {
         return playerQueue.get(currentPlayer);
+    }
+
+    public static int getCurrentPlayerIndex() {
+        return currentPlayer;
+    }
+
+    public static int getTotalPlayers() {
+        return playerQueue.size();
     }
 
     public static void setStartingScore(int score) {

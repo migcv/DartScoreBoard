@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dart Score Board</string>
+    <string name="app_name">Dart Scoreboard</string>
     <string name="title_activity_players">PlayersActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
