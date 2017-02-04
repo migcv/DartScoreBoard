@@ -78,6 +78,7 @@ public class FinalScore extends Fragment {
 
     private View.OnClickListener menuButton = new View.OnClickListener() {
         public void onClick(View v) {
+            x01.clean();
             Intent activity = new Intent(view.getContext(), MainActivity.class);
             startActivity(activity);
         }

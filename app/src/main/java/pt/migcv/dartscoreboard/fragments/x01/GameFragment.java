@@ -5,17 +5,27 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import pt.migcv.dartscoreboard.R;
+import pt.migcv.dartscoreboard.activities.MainActivity;
 import pt.migcv.dartscoreboard.core.Darts;
 import pt.migcv.dartscoreboard.core.Player;
 import pt.migcv.dartscoreboard.core.x01;
@@ -104,13 +114,19 @@ public class GameFragment extends Fragment {
         view.findViewById(R.id.x3Button3).setOnClickListener(multiplierButton3);
 
         view.findViewById(R.id.backButton).setOnClickListener(previousTurn);
+        view.findViewById(R.id.quitButton).setOnClickListener(quitGame);
         view.findViewById(R.id.endTurn).setOnClickListener(endTurn);
 
-        ((TextView) view.findViewById(R.id.playerName)).setOnClickListener(playerStats);
+        view.findViewById(R.id.playerName).setOnClickListener(playerStats);
+        view.findViewById(R.id.score_layout).setOnClickListener(playersScores);
+        view.findViewById(R.id.turn_layout).setOnClickListener(allThrows);
+        view.findViewById(R.id.current_turn_layout).setOnClickListener(turnThrows);
 
         return view;
     }
-
+    /*
+     *  DIALOG - Player Stats
+     */
     View.OnClickListener playerStats = new View.OnClickListener() {
         public void onClick(View v) {
             final Dialog dialog = new Dialog(view.getContext());
@@ -127,6 +143,167 @@ public class GameFragment extends Fragment {
             ((TextView)dialog.findViewById(R.id.x1Hits)).setText("" + x01.getCurrentPlayer().getX1Hits());
             ((TextView)dialog.findViewById(R.id.x2Hits)).setText("" + x01.getCurrentPlayer().getX2Hits());
             ((TextView)dialog.findViewById(R.id.x3Hits)).setText("" + x01.getCurrentPlayer().getX3Hits());
+
+            dialog.show();
+        }
+    };
+    /*
+     *  DIALOG - Players Scores
+     */
+    View.OnClickListener playersScores = new View.OnClickListener() {
+        public void onClick(View v) {
+            final Dialog dialog = new Dialog(view.getContext());
+
+            dialog.setContentView(R.layout.dialog_x01_players_scores);
+            dialog.setTitle("Players Scores");
+
+            LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.score_layout);
+
+            ArrayList<Player> leaderBoard = x01.getPlayerQueue();
+
+            for(int i = 0; i < leaderBoard.size(); i++) {
+                int playerLowerScore;
+                for (int j = i + 1; j < leaderBoard.size(); j++) {
+                    if (x01.getPlayerScore(leaderBoard.get(i).getName()) > x01.getPlayerScore(leaderBoard.get(j).getName())) {
+                        Player aux = leaderBoard.get(i);
+                        leaderBoard.set(i, leaderBoard.get(j));
+                        leaderBoard.set(j, aux);
+                    }
+                }
+                System.out.println(i + " - " + leaderBoard.get(i).getName() + " - " + x01.getPlayerScore(leaderBoard.get(i).getName()));
+
+                LinearLayout newll = new LinearLayout(dialog.getContext());
+                newll.setOrientation(LinearLayout.HORIZONTAL);
+                newll.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+                TextView playerName = new TextView(dialog.getContext());
+                playerName.setText((i + 1) + "   " + leaderBoard.get(i).getName().toUpperCase());
+                playerName.setTypeface(null, Typeface.BOLD);
+                playerName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+
+                newll.addView(playerName, new LayoutParams(500, LayoutParams.MATCH_PARENT));
+
+                TextView playerScore = new TextView(dialog.getContext());
+                playerScore.setText("" + x01.getPlayerScore(leaderBoard.get(i).getName()));
+                playerScore.setTypeface(null, Typeface.BOLD);
+                playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                newll.addView(playerScore, new LayoutParams(150, LayoutParams.MATCH_PARENT));
+
+                ll.addView(newll, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            }
+
+            dialog.show();
+        }
+    };
+    /*
+     *  DIALOG - Current Turn Throws
+     */
+    View.OnClickListener turnThrows = new View.OnClickListener() {
+        public void onClick(View v) {
+            final Dialog dialog = new Dialog(view.getContext());
+
+            dialog.setContentView(R.layout.dialog_x01_current_turn_throws);
+            dialog.setTitle("Turn Throws");
+
+            ((TextView) dialog.findViewById(R.id.turn)).setText("" + x01.getTurn());
+
+            LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.turn_throws_layout);
+
+            ArrayList<Player> playerQueue = x01.getPlayerQueue();
+
+            for(int i = 0; i < playerQueue.size(); i++) {
+                LinearLayout newll = new LinearLayout(dialog.getContext());
+                newll.setOrientation(LinearLayout.HORIZONTAL);
+                newll.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+                TextView playerName = new TextView(dialog.getContext());
+                playerName.setText((i + 1) + "   " + playerQueue.get(i).getName().toUpperCase());
+                playerName.setTypeface(null, Typeface.BOLD);
+                playerName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+
+                newll.addView(playerName, new LayoutParams(500, LayoutParams.MATCH_PARENT));
+
+                if(playerQueue.get(i).getScoreTurns().size() >= x01.getTurn()) {
+                    TextView playerScore = new TextView(dialog.getContext());
+                    playerScore.setText("" + playerQueue.get(i).getScoreTurns().get(x01.getTurn() - 1)[0] + " x" + playerQueue.get(i).getMultiplierTurns().get(x01.getTurn() - 1)[0] + "\n" + playerQueue.get(i).getScoreTurns().get(x01.getTurn() - 1)[1] + " x" + playerQueue.get(i).getMultiplierTurns().get(x01.getTurn() - 1)[1] + "\n" + playerQueue.get(i).getScoreTurns().get(x01.getTurn() - 1)[2] + " x" + playerQueue.get(i).getMultiplierTurns().get(x01.getTurn() - 1)[2]);
+                    playerScore.setTypeface(null, Typeface.BOLD);
+                    playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                    playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                    newll.addView(playerScore, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                }
+                else if(x01.getCurrentPlayerIndex() == i) {
+                    TextView playerScore = new TextView(dialog.getContext());
+                    playerScore.setText("Playing...");
+                    playerScore.setTypeface(null, Typeface.BOLD);
+                    playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                    playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                    newll.addView(playerScore, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                }
+                else {
+                    TextView playerScore = new TextView(dialog.getContext());
+                    playerScore.setText("Waiting...");
+                    playerScore.setTypeface(null, Typeface.BOLD);
+                    playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                    playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                    newll.addView(playerScore, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                }
+
+                ll.addView(newll, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            }
+
+            dialog.show();
+        }
+    };
+    /*
+     *  DIALOG - All Throws of Player
+     */
+    View.OnClickListener allThrows = new View.OnClickListener() {
+        public void onClick(View v) {
+            final Dialog dialog = new Dialog(view.getContext());
+
+            dialog.setContentView(R.layout.dialog_x01_all_turn_throws);
+            dialog.setTitle("All Throws");
+
+            ((TextView) dialog.findViewById(R.id.playerName)).setText(x01.getCurrentPlayer().getName().toUpperCase());
+
+            LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.throws_layout);
+
+            for(int i = 0; i < x01.getTurn() - 1; i++) {
+                LinearLayout newll = new LinearLayout(dialog.getContext());
+                newll.setOrientation(LinearLayout.HORIZONTAL);
+                newll.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+                if(x01.getCurrentPlayer().getScoreTurns().size() > 0) {
+                    TextView playerScore = new TextView(dialog.getContext());
+                    playerScore.setText((i + 1) + "   " + x01.getCurrentPlayer().getScoreTurns().get(i)[0] + " x" + x01.getCurrentPlayer().getMultiplierTurns().get(i)[0] + "   " + x01.getCurrentPlayer().getScoreTurns().get(i)[1] + " x" + x01.getCurrentPlayer().getMultiplierTurns().get(i)[1] + "   " + x01.getCurrentPlayer().getScoreTurns().get(i)[2] + " x" + x01.getCurrentPlayer().getMultiplierTurns().get(i)[2] + "   " + x01.getCurrentPlayer().getFinalScoreTurns().get(i));
+                    playerScore.setTypeface(null, Typeface.BOLD);
+                    playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                    playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                    newll.addView(playerScore, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                } else {
+                    TextView playerScore = new TextView(dialog.getContext());
+                    playerScore.setText("Haven't played yet!");
+                    playerScore.setTypeface(null, Typeface.BOLD);
+                    playerScore.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    playerScore.setGravity(Gravity.END | Gravity.RIGHT);
+                    playerScore.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+                    newll.addView(playerScore, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                }
+
+                ll.addView(newll, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            }
 
             dialog.show();
         }
@@ -170,7 +347,8 @@ public class GameFragment extends Fragment {
             x01.turnThrows[0] = Integer.parseInt(throw1);
             x01.turnThrows[1] = Integer.parseInt(throw2);
             x01.turnThrows[2] = Integer.parseInt(throw3);
-            System.out.println("Throws: " + x01.turnThrows[0] + ", " + x01.turnThrows[1] + ", " + x01.turnThrows[2]);
+            System.out.println("Player: " + x01.getCurrentPlayer().getName());
+            System.out.println("Throws: " + x01.turnThrows[0] + " (*" + x01.turnMultiplier[0] + "), " + x01.turnThrows[1] + " (*" + x01.turnMultiplier[0] + "), " + x01.turnThrows[2] + " (*" + x01.turnMultiplier[0] + ")");
             for(int i = 0; i < 3; i++) {
                 if((x01.turnThrows[i] > 20 || x01.turnThrows[i] < 0) && x01.turnThrows[i] != 25) {
                     Snackbar.make(view, (i+1) + "st throw is invalid", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -198,6 +376,39 @@ public class GameFragment extends Fragment {
             }
         }
     };
+
+    private View.OnClickListener quitGame = new View.OnClickListener() {
+        public void onClick(View v) {
+            quitGameVerification();
+            /*x01.clean();
+            Intent activity = new Intent(view.getContext(), MainActivity.class);
+            startActivity(activity);*/
+        }
+    };
+
+    private void quitGameVerification() {
+        final Dialog dialog = new Dialog(view.getContext());
+
+        dialog.setContentView(R.layout.dialog_x01_quit_game);
+        dialog.setTitle("Quit");
+
+        dialog.findViewById(R.id.yesButton).setOnClickListener( new View.OnClickListener() {
+                public void onClick(View v) {
+                    x01.clean();
+                    Intent activity = new Intent(view.getContext(), MainActivity.class);
+                    startActivity(activity);
+                }
+            }
+        );
+        dialog.findViewById(R.id.noButton).setOnClickListener( new View.OnClickListener() {
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            }
+        );
+
+        dialog.show();
+    }
 
     private View.OnClickListener missedButton = new View.OnClickListener() {
         public void onClick(View v) {

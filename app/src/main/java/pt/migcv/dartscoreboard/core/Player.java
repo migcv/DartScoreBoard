@@ -23,7 +23,7 @@ public class Player {
     private int x3Hits = 0;
 
     private int bestHouse = 0;
-    private Integer[] bestHouseArray = new Integer[21];
+    private Integer[] bestHouseArray;
 
     private float scorePerTurn = 0;
 
@@ -41,7 +41,7 @@ public class Player {
         x2Hits = 0;
         x3Hits = 0;
         throwsMissed = 0;
-        bestHouseArray = new Integer[21];
+        bestHouseArray = new Integer[25];
 
         for(int i = 0; i < scoreTurns.size(); i++) {
             for(int j = 0; j < 3; j++) {
@@ -60,11 +60,11 @@ public class Player {
                     x3Hits++;
                 }
                 /* Best House */
-                if(bestHouseArray[scoreTurns.get(i)[j]] == null) {
-                    bestHouseArray[scoreTurns.get(i)[j]] = 1;
+                if(bestHouseArray[scoreTurns.get(i)[j]-1] == null) {
+                    bestHouseArray[scoreTurns.get(i)[j]-1] = 1;
                 }
                 else {
-                    bestHouseArray[scoreTurns.get(i)[j]]++;
+                    bestHouseArray[scoreTurns.get(i)[j]-1]++;
                 }
             }
             int score = scoreTurns.get(i)[0] * multiplierTurns.get(i)[0] + scoreTurns.get(i)[1] * multiplierTurns.get(i)[1] + scoreTurns.get(i)[2] * multiplierTurns.get(i)[2];
@@ -96,6 +96,10 @@ public class Player {
 
     public ArrayList<Integer[]> getScoreTurns() {
         return scoreTurns;
+    }
+
+    public ArrayList<Integer> getFinalScoreTurns() {
+        return finalScoreTurns;
     }
 
     public int getThrowsMissed() {

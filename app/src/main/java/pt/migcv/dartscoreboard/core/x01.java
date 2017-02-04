@@ -42,7 +42,7 @@ public class x01 {
                 n = rand.nextInt(Darts.getTotalPlayers());
             }
             playerQueue.add(Darts.getPlayer(n));
-            System.out.println(i + " - " + playerQueue.get(i));
+            System.out.println(i + " - " + playerQueue.get(i).getName());
         }
     }
 
@@ -52,7 +52,6 @@ public class x01 {
         turnScore[0] = turnThrows[0] * turnMultiplier[0];
         turnScore[1] = turnThrows[1] * turnMultiplier[1];
         turnScore[2] = turnThrows[2] * turnMultiplier[2];
-        System.out.println("Throws for player: " + getCurrentPlayer().getName());
         for(int j = 0; j < POSSIBLE_PLAYS.length; j++) {
             int scoreTry = 0;
             for(int i = 0; i < POSSIBLE_PLAYS[j].length; i++) {
@@ -98,6 +97,8 @@ public class x01 {
         return currentPlayer;
     }
 
+    public static ArrayList<Player> getPlayerQueue() { return playerQueue; }
+
     public static int getTotalPlayers() {
         return playerQueue.size();
     }
@@ -119,5 +120,20 @@ public class x01 {
     public static boolean gameEnded() { return gameEnded; }
 
     public static String getWinner() { return winner; }
+
+    public static void clean() {
+        score_start = 0;
+        game_mode = "";
+        gameEnded = false;
+        winner = "";
+        playersMap = new HashMap<String, Integer>(); // <player_name : player_score>
+        currentPlayer = 0;
+        playerQueue = new ArrayList<Player>();
+        turn = 1;
+        turnThrows = new Integer[3];
+        turnMultiplier[0] = 1;
+        turnMultiplier[1] = 1;
+        turnMultiplier[2] = 1;
+    }
 
 }
