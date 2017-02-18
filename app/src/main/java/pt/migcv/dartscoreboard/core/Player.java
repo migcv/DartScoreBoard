@@ -60,10 +60,10 @@ public class Player {
                     x3Hits++;
                 }
                 /* Best House */
-                if(bestHouseArray[scoreTurns.get(i)[j]-1] == null) {
+                if(scoreTurns.get(i)[j] != 0 && bestHouseArray[scoreTurns.get(i)[j]-1] == null) {
                     bestHouseArray[scoreTurns.get(i)[j]-1] = 1;
                 }
-                else {
+                else if(scoreTurns.get(i)[j] != 0) {
                     bestHouseArray[scoreTurns.get(i)[j]-1]++;
                 }
             }
